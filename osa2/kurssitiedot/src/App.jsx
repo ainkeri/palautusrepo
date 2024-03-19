@@ -47,17 +47,7 @@ const App = () => {
   return (
     <div>
       {courses.map(course =>
-        <Courses key={course.id} courses={course} />)}
-    </div>
-  )
-}
-
-const Courses = ({ courses }) => {
-  console.log(courses)
-  return (
-    <div>
-      <h1>Web development curriculum</h1>
-      <Course courses={courses} />
+        <Course key={course.id} courses={course} />)}
     </div>
   )
 }
@@ -66,6 +56,7 @@ const Course = ({ courses }) => {
   console.log(courses)
   return (
     <div>
+      <h1>Web development curriculum</h1>
       <Header course={courses} />
       <Content parts={courses.parts} />
       <Total parts={courses.parts} />
