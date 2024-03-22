@@ -9,6 +9,15 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+    
+    const personExists = persons.some(person => person.name === newPerson)
+
+    if (personExists) {
+      return (
+        alert(`${newPerson} is already added to phonebook`)
+      )
+    }
+
     const personObject = {
       name: newPerson,
       id: persons.length + 1,
@@ -39,7 +48,6 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {console.log("Persons array:", persons)}
       <div>
         {persons.map(person =>
           <Person key={person.id} person={person.name} />
