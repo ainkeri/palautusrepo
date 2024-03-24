@@ -45,6 +45,18 @@ const App = () => {
       })
   }
 
+  const toggleDeletionOf = (id) => {
+    const url = `http://localhost:3001/persons/${id}`
+    const person = persons.find(p => p.id === id)
+
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      axios.delete(url)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+      })
+    }
+  }
+
   const handlePersonChange = (event) => {
     console.log(event.target.value)
     setNewPerson(event.target.value)
@@ -71,7 +83,11 @@ const App = () => {
       <h2>Numbers</h2>
       <div>
         {filteredPeople.map((person, key) =>
-          <Person key={key} person={person} />
+          <Person 
+            key={key}
+            person={person}
+            toggleDeletion={() => toggleDeletionOf(person.id)}
+          />
         )}
       </div>
     </div>
