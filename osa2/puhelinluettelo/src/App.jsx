@@ -20,11 +20,10 @@ const App = () => {
         setPersons(response.data)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
 
   const addPerson = (event) => {
     event.preventDefault()
-    
+
     const personExists = persons.some(person => person.name === newPerson)
 
     if (personExists) {
@@ -38,9 +37,13 @@ const App = () => {
       number: newNumber,
     }
 
-    setPersons(persons.concat(personObject))
-    setNewPerson('')
-    setNewNumber('')
+    axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewPerson('')
+        setNewNumber('')
+      })
   }
 
   const handlePersonChange = (event) => {
