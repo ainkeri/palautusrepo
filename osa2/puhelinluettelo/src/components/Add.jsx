@@ -1,4 +1,4 @@
-const Add = ({ onsubmit, value, onChange, value2, onChange2 }) => {
+const Add = ({ onsubmit, value, onChange, value2, onChange2, toggleChange }) => {
     return (
         <form onSubmit={onsubmit}>
             <div>
