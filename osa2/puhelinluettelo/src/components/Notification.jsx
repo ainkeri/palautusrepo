@@ -1,4 +1,12 @@
-const Notification = ({ message }) => {
+const Notification = ({ message, rejected }) => {
+    if (rejected !== null) {
+        return (
+            <div className="failed">
+                {rejected}
+            </div>
+        )
+    }
+
     if (message === null) {
         return null
     }
