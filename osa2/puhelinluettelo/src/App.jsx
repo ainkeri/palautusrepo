@@ -3,13 +3,16 @@ import axios from 'axios'
 import Person from './components/Person'
 import Filter from './components/Filter'
 import Add from './components/Add'
+import Notification from './components/Notification'
 import personService from './services/persons'
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newPerson, setNewPerson] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
 
   useEffect(() => {
@@ -42,6 +45,12 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewPerson('')
         setNewNumber('')
+        setErrorMessage(
+          `Added ${returnedPerson.name}`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       })
   }
 
@@ -53,7 +62,13 @@ const App = () => {
       axios.delete(url)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
-      })
+          setErrorMessage(
+            `Removed ${person.name}`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
     }
   }
 
@@ -66,6 +81,13 @@ const App = () => {
       axios.put(url, personObject)
         .then(changedPerson => {
           setPersons(persons.map(person => person.id !== id ? person : changedPerson.data))
+          setErrorMessage(
+            `Updated ${person.name}`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setPersons(persons.filter(p => p.id !== id))
         })
     }
   }
@@ -90,6 +112,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <Filter
         value={filter}
         onChange={handleFilter}
