@@ -13,6 +13,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+  const [rejectedMessage, setRejectedMessage] = useState(null)
 
 
   useEffect(() => {
@@ -87,8 +88,16 @@ const App = () => {
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000)
-          setPersons(persons.filter(p => p.id !== id))
         })
+        .catch(error => {
+          setRejectedMessage(
+            `Information of ${person.name} has already been removed from server`
+          )
+          setTimeout(() => {
+            setRejectedMessage(null)
+          }, 5000)
+        })
+        setPersons(persons.filter(p => p.id !== id))
     }
   }
 
@@ -112,7 +121,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage} />
+      <Notification message={errorMessage} rejected={rejectedMessage}/>
       <Filter
         value={filter}
         onChange={handleFilter}
