@@ -23,11 +23,11 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    const personExists = persons.some(person => person.name === newPerson)
+    const personExists = persons.find(person => person.name === newPerson)
 
     if (personExists) {
       return (
-        alert(`${newPerson} is already added to phonebook`)
+        toggleChangeOf(personExists.id)
       )
     }
 
@@ -57,6 +57,19 @@ const App = () => {
     }
   }
 
+  const toggleChangeOf = (id) => {
+    const url = `http://localhost:3001/persons/${id}`
+    const person = persons.find(p => p.id === id)
+    const personObject = {name: newPerson, number: newNumber}
+
+    if (window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
+      axios.put(url, personObject)
+        .then(changedPerson => {
+          setPersons(persons.map(person => person.id !== id ? person : changedPerson.data))
+        })
+    }
+  }
+
   const handlePersonChange = (event) => {
     console.log(event.target.value)
     setNewPerson(event.target.value)
@@ -77,9 +90,18 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter value={filter} onChange={handleFilter}/>   
+      <Filter
+        value={filter}
+        onChange={handleFilter}
+      />   
       <h2>Add a new</h2>
-      <Add onsubmit={addPerson} value={newPerson} onChange={handlePersonChange} value2={newNumber} onChange2={handleNumberChange}/>
+      <Add
+        onsubmit={addPerson}
+        value={newPerson}
+        onChange={handlePersonChange}
+        value2={newNumber}
+        onChange2={handleNumberChange}
+      />
       <h2>Numbers</h2>
       <div>
         {filteredPeople.map((person, key) =>
