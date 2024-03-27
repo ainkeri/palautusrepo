@@ -56,7 +56,7 @@ const App = () => {
   }
 
   const toggleDeletionOf = (id) => {
-    const url = `http://localhost:3001/persons/${id}`
+    const url = `http://localhost:3001/api/persons/${id}`
     const person = persons.find(p => p.id === id)
 
     if (window.confirm(`Delete ${person.name} ?`)) {
@@ -74,7 +74,7 @@ const App = () => {
   }
 
   const toggleChangeOf = (id) => {
-    const url = `http://localhost:3001/persons/${id}`
+    const url = `http://localhost:3001/api/persons`
     const person = persons.find(p => p.id === id)
     const personObject = {name: newPerson, number: newNumber}
 
