@@ -7,18 +7,19 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    console.log('effect')
-    if (filter) {
-    axios
-      .get(`https://studies.cs.helsinki.fi/restcountries/api/all`)
-      .then(response => {
-        console.log('promise fulfilled')
-        setCountries(response.data)
-        })
-      }
-    }, [filter])
+    const delayFilter = setTimeout(() => {
+      if (filter) {
+        axios
+          .get(`https://studies.cs.helsinki.fi/restcountries/api/all`)
+          .then(response => {
+            setCountries(response.data)
+            })
+        }
+      }, 300)
 
-    console.log('render', countries.length, 'countries')
+      return () => clearTimeout(delayFilter)
+  
+    }, [filter])
 
   const handleFilter = (event) => {
     event.preventDefault()
@@ -26,7 +27,7 @@ const App = () => {
   }
 
   const filteredCountries = countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
-  
+
   if (filteredCountries.length > 10 && filter) return (
     <div>
       find countries <input value={filter} onChange={handleFilter} />
@@ -41,7 +42,8 @@ const App = () => {
       find countries <input value={filter} onChange={handleFilter} />
       <div>
         {filteredCountries.map((country, key) =>
-        <Country key={key} country={country} length={filteredCountries.length} />)}
+        <Country key={key} country={country} length={filteredCountries.length}/>
+        )}
       </div>
     </div>
   )
