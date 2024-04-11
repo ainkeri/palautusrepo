@@ -34,7 +34,7 @@ const App = () => {
 
     const personExists = persons.find(person => person.name === newPerson)
     
-    if (personExists.id) {
+    if (personExists) {
       if (window.confirm(`${newPerson} is already added to phonebook, replace the old number with a new one?`)) {
           personService
             .update(personExists.id, personObject)
@@ -71,6 +71,14 @@ const App = () => {
         )
         setTimeout(() => {
           setErrorMessage(null)
+        }, 5000)
+      })
+      .catch(error => {
+        setRejectedMessage(
+          `${error.message.data}`
+        )
+        setTimeout(() => {
+          setRejectedMessage(null)
         }, 5000)
       })
   }
