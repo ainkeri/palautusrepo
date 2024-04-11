@@ -27,17 +27,37 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    const personExists = persons.find(person => person.name === newPerson)
-
-    if (personExists) {
-      return (
-        toggleChangeOf(personExists.id)
-      )
-    }
-
     const personObject = {
       name: newPerson,
-      number: newNumber,
+      number: newNumber
+    }
+
+    const personExists = persons.find(person => person.name === newPerson)
+    
+    if (personExists.id) {
+      if (window.confirm(`${newPerson} is already added to phonebook, replace the old number with a new one?`)) {
+          personService
+            .update(personExists.id, personObject)
+            .then((returnedPerson) => {
+              setPersons(persons.map(p => p.id !== personExists.id ? p : returnedPerson))
+              setNewPerson('')
+              setNewNumber('')
+              setErrorMessage(
+                `Updated ${newPerson}`
+              )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
+          .catch(error => {
+            setRejectedMessage(
+              `Information of ${newPerson} has already been removed from server`
+            )
+            setTimeout(() => {
+              setRejectedMessage(null)
+            }, 5000)
+          })
+      }
     }
 
     personService
@@ -70,34 +90,6 @@ const App = () => {
             setErrorMessage(null)
           }, 5000)
         })
-    }
-  }
-
-  const toggleChangeOf = (id) => {
-    const url = `http://localhost:3001/api/persons`
-    const person = persons.find(p => p.id === id)
-    const personObject = {name: newPerson, number: newNumber}
-
-    if (window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
-      axios.put(url, personObject)
-        .then(changedPerson => {
-          setPersons(persons.map(person => person.id !== id ? person : changedPerson.data))
-          setErrorMessage(
-            `Updated ${person.name}`
-          )
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
-        })
-        .catch(error => {
-          setRejectedMessage(
-            `Information of ${person.name} has already been removed from server`
-          )
-          setTimeout(() => {
-            setRejectedMessage(null)
-          }, 5000)
-        })
-        setPersons(persons.filter(p => p.id !== id))
     }
   }
 
