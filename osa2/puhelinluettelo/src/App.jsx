@@ -74,7 +74,7 @@ const App = () => {
       })
       .catch(error => {
         setRejectedMessage(
-          `${error.response.data}`
+          `${error.response.data.error}`
         )
         setTimeout(() => {
           setRejectedMessage(null)
