@@ -58,8 +58,7 @@ const App = () => {
             }, 5000)
           })
       }
-    }
-
+    } else {
     personService
       .create(personObject)
       .then(returnedPerson => {
@@ -75,13 +74,14 @@ const App = () => {
       })
       .catch(error => {
         setRejectedMessage(
-          `${error.message.data}`
+          `${error.response.data}`
         )
         setTimeout(() => {
           setRejectedMessage(null)
         }, 5000)
       })
   }
+}
 
   const toggleDeletionOf = (id) => {
     const url = `http://localhost:3001/api/persons/${id}`
