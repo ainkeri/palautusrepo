@@ -31,16 +31,16 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-    const titles = _.countBy(blogs.map((blog) => blog.author))
+    const authors = _.countBy(blogs.map((blog) => blog.author))
 
-    const most = Object.keys(titles).reduce((a, b) => titles[a] > titles[b] ? a : b)
+    const most = Object.keys(authors).reduce((a, b) => authors[a] > authors[b] ? a : b)
 
     return {
         author: most,
-        blogs: titles[most]
+        blogs: authors[most]
     }
 }
-  
+
 module.exports = {
     dummy,
     totalLikes,
