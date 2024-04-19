@@ -51,12 +51,31 @@ test('a blog can be added', async () => {
   assert(titles.includes('Blogging is cool'))
 })
 
-test.only('id is defined', async () => {
+test('id is defined', async () => {
   const response = await api.get('/api/blogs')
 
   const keys = Object.keys(response.body[0])
 
   assert(keys.includes('id'))
+})
+
+test('blog without likes set to zero', async () => {
+  const newBlog = {
+    title: 'There is a title',
+    author: 'There is an author',
+    url: 'There is an url'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+  
+  const response = await api.get('/api/blogs')
+
+  const addedBlog = response.body[response.body.length - 1].likes
+  
+  assert.strictEqual(addedBlog, 0)
 })
 
 
