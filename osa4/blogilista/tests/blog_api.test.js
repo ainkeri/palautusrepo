@@ -74,8 +74,42 @@ test('blog without likes set to zero', async () => {
   const response = await api.get('/api/blogs')
 
   const addedBlog = response.body[response.body.length - 1].likes
-  
+
   assert.strictEqual(addedBlog, 0)
+})
+
+test('blog without title is not added', async () => {
+  const newBlog = {
+    author: "Author 1",
+    url: "url",
+    likes: 20
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+  
+  const response = await api.get('/api/blogs')
+
+  assert.strictEqual(response.body.length, helper.initialBlogs.length)
+})
+
+test ('blog without url is not added', async () => {
+  const newBlog = {
+    title: "Title",
+    author: "Author 2",
+    likes: 300
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+  
+  const response = await api.get('/api/blogs')
+
+  assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
 
