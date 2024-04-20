@@ -112,6 +112,54 @@ test ('blog without url is not added', async () => {
   assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
+test('a blog can be deleted', async () => {
+  const deleteId = await api.get('/api/blogs')
+
+  await api
+    .delete(`/api/blogs/${deleteId.body[0].id}`)
+    .expect(204)
+  
+  const response = await api.get('/api/blogs')
+
+  assert.strictEqual(response.body.length, helper.initialBlogs.length - 1)
+})
+
+test('a blog can be updated', async () => {
+  const newBlog = {
+    title: "Title",
+    author: "Author 2",
+    url: "moi",
+    likes: 300
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+  
+  const response = await api.get('/api/blogs')
+
+  const updateId = response.body[response.body.length - 1].id
+
+  const updateBlog = {
+    title: "Title",
+    author: "Author 2",
+    url: "moi",
+    likes: 10000
+  }
+
+  await api
+    .put(`/api/blogs/${updateId}`)
+    .send(updateBlog)
+    .expect(200)
+
+  const result = await api.get(`/api/blogs`)
+
+  const updated = result.body[result.body.length - 1].likes
+
+  assert.strictEqual(updated, 10000)
+})
+
 
 after(async () => {
   await mongoose.connection.close()

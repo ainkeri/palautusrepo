@@ -1,0 +1,10 @@
+PUT http://localhost:3003/api/blogs/662285c27e9432e7269c4059
+Content-Type: application/json
+
+{
+  "title": "kkkss postaus",
+  "author": "jaa",
+  "url": "jauuuu",
+  "likes": 20000,
+  "id": "662285c27e9432e7269c4059"
+}
