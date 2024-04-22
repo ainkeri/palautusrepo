@@ -2,9 +2,9 @@ PUT http://localhost:3003/api/blogs/662285c27e9432e7269c4059
 Content-Type: application/json
 
 {
-  "title": "kkkss postaus",
-  "author": "jaa",
-  "url": "jauuuu",
+  "title": "Title",
+  "author": "Author 2",
+  "url": "moi",
   "likes": 20000,
-  "id": "662285c27e9432e7269c4059"
+  "id": "6623b8848f5915633f65d62e"
 }
