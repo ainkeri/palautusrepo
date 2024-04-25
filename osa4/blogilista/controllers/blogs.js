@@ -1,6 +1,7 @@
 const blogRouter = require('express').Router()
 const mongoose = require('mongoose')
 const Blog = require('../models/blog')
+require('express-async-errors')
 
 blogRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({})
