@@ -5,7 +5,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const helper = require('./test_helper')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
@@ -193,6 +193,110 @@ describe('when there is initially one user at db', () => {
     const usernames = usersAtEnd.map(u => u.username)
     assert(usernames.includes(newUser.username))
   })
+
+  test('creation fails with proper statuscode and message if username is already taken', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'root',
+      name: 'Superuser',
+      password: 'salainen',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert(result.body.error.includes('expected `username` to be unique'))
+
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('creation fails with proper statuscode and message if username length is below 3', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'mo',
+      name: 'moikka',
+      password: 'shhhh',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+    
+      const usersAtEnd = await helper.usersInDb()
+      assert(result.body.error.includes('is shorter than the minimum allowed length (3).'))
+
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('creation fails with proper statuscode and message if username is not defined', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      name: 'moii',
+      password: 'miau',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+    
+    const usersAtEnd = await helper.usersInDb()
+    assert(result.body.error.includes('`username` is required.'))
+    
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('creation fails with proper statuscode and message if password is not defined', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'heippa',
+      name: 'moikuuuu',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+    
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(result.body.error, 'password missing')
+
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('creation fails with proper statuscode and message if password length is below 3', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'heippa',
+      name: 'moikuuuu',
+      password: 'kk'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+    
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(result.body.error, 'password minimum length is 3')
+
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
 })
 
 
