@@ -1,10 +1,11 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc3RhYWphIiwiaWQiOiI2NjJiNmMwOTcwZjU0YjFiYWIxZTIzN2MiLCJpYXQiOjE3MTQxMjMzNjl9.DMjcwuWoz-qMoSS6rhAa29ijHqIjbo2jNyu_D-wH_k4
 
 {
-    "title": "heippapaaa",
-    "author": "moiiii",
-    "url": "jauuuu",
-    "likes": 200,
-    "user": "6626ad614c7922a92371d15d"
+    "title": "Another blog",
+    "author": "Me",
+    "url": "www.ksdjkjdkjs",
+    "likes": 30,
+    "user": "662b6c0970f54b1bab1e237c"
 }
