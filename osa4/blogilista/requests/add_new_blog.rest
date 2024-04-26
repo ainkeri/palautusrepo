@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc3RhYWphIiwiaWQiOiI2NjJiNmMwOTcwZjU0YjFiYWIxZTIzN2MiLCJpYXQiOjE3MTQxMjMzNjl9.DMjcwuWoz-qMoSS6rhAa29ijHqIjbo2jNyu_D-wH_k4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlc3RhYWphIiwiaWQiOiI2NjJiNmMwOTcwZjU0YjFiYWIxZTIzN2MiLCJpYXQiOjE3MTQxMjY0Njd9.kADIkZFTQ0-izzecH0AUTB02lem1QGyxfwddkEZWDDY
 
 {
-    "title": "Another blog",
+    "title": "Poistetaan blog",
     "author": "Me",
     "url": "www.ksdjkjdkjs",
     "likes": 30,
