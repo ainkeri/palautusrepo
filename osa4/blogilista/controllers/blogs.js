@@ -5,7 +5,15 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 require('express-async-errors')
 
-blogRouter.post('/', async (request, response) => {
+const middleware = require('../utils/middleware')
+
+blogRouter.get('/', async (request, response) => {
+  const blogs = await Blog
+    .find({}).populate('user', { username: 1, name: 1, id: 1 })
+  response.json(blogs)
+})
+
+blogRouter.post('/', middleware.userExtractor, async (request, response) => {
   const body = request.body
   const user = request.user
 
@@ -34,13 +42,7 @@ blogRouter.post('/', async (request, response) => {
   }
 })
 
-blogRouter.get('/', async (request, response) => {
-  const blogs = await Blog
-    .find({}).populate('user', { username: 1, name: 1, id: 1 })
-  response.json(blogs)
-})
-
-blogRouter.delete('/:id', async (request, response) => {
+blogRouter.delete('/:id', middleware.userExtractor,  async (request, response) => {
   const blog = await Blog.findById(request.params.id)
   const user = request.user
 
