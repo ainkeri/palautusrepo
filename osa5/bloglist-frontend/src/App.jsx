@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -64,22 +64,12 @@ const App = () => {
     window.location.reload()
   }
 
-  const addBlog = (event) => {
-    event.preventDefault()
-
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
-
+  const addBlog = (blogObject) => {
+    blogFormRef.current.toggleVisiblity()
     blogService
       .create(blogObject)
-       .then(returnedBlog => {
+      .then(returnedBlog => {
          setBlogs(blogs.concat(returnedBlog))
-         setTitle('')
-         setAuthor('')
-         setUrl('')
          setErrorMessage(
           `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
          )
@@ -117,6 +107,8 @@ const App = () => {
     </div>
   )
 
+  const blogFormRef = useRef()
+
   const blogForm = () => (
     <div>
       <h2>blogs</h2>
@@ -126,16 +118,8 @@ const App = () => {
       </div>
 
       <div>
-        <Togglable buttonLabel='new blog'>
-          <BlogForm
-            onSubmit={addBlog}
-            title={newTitle}
-            author={newAuthor}
-            url={newUrl}
-            handleTitleChange={({ target }) => setTitle(target.value)}
-            handleAuthorChange={({ target }) => setAuthor(target.value)}
-            handleUrlChange={({ target }) => setUrl(target.value)}
-          />
+        <Togglable buttonLabel='new blog' ref={blogFormRef}>
+          <BlogForm createBlog={addBlog} />
         </Togglable>
       </div>
 
