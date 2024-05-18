@@ -4,6 +4,8 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,7 +17,7 @@ const App = () => {
   const [newUrl, setUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [rejectedMessage, setRejectedMessage] = useState(null)
-
+  const [newBlogVisible, setNewBlogVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -123,31 +125,19 @@ const App = () => {
         <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       </div>
 
-      <h2>create new</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title:
-            <input
-            value={newTitle}
-            onChange={({ target }) => setTitle(target.value)}
+      <div>
+        <Togglable buttonLabel='new blog'>
+          <BlogForm
+            onSubmit={addBlog}
+            title={newTitle}
+            author={newAuthor}
+            url={newUrl}
+            handleTitleChange={({ target }) => setTitle(target.value)}
+            handleAuthorChange={({ target }) => setAuthor(target.value)}
+            handleUrlChange={({ target }) => setUrl(target.value)}
           />
-        </div>
-        <div>
-          author:
-            <input
-            value={newAuthor}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-            <input
-            value={newUrl}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type='submit'>create</button>
-      </form>
+        </Togglable>
+      </div>
 
       <div>
         {blogs.map(blog => 
