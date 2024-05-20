@@ -1,6 +1,7 @@
 import { useState } from "react"
+import blogService from '../services/blogs'
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, user, addLikeTo }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -28,7 +29,7 @@ const Blog = ({ blog, user }) => {
         {blog.title} {blog.author}
         <button onClick={toggleVisiblity}>hide</button>
         <div>{blog.url}</div>
-        <div>likes {blog.likes} <button>like</button></div>
+        <div>likes {blog.likes} <button onClick={addLikeTo}>like</button></div>
         {user.name}
       </div>
     </div>  
