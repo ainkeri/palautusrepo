@@ -12,12 +12,8 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newTitle, setTitle] = useState('')
-  const [newAuthor, setAuthor] = useState('')
-  const [newUrl, setUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [rejectedMessage, setRejectedMessage] = useState(null)
-  const [newBlogVisible, setNewBlogVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -79,6 +75,17 @@ const App = () => {
        })
   }
 
+  const addLike = id => {
+    const blog = blogs.find(b => b.id === id)
+    const likedBlog = { ...blog, likes: blog.likes + 1}
+
+    blogService
+      .update(id, likedBlog)
+        .then(returnedBlog => {
+          setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+        })
+  }
+
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
@@ -125,7 +132,11 @@ const App = () => {
 
       <div>
         {blogs.map(blog => 
-          <Blog key={blog.id} blog={blog} user={blog.user} />
+          <Blog 
+            key={blog.id} 
+            blog={blog} 
+            user={blog.user} 
+            addLikeTo={() => addLike(blog.id)}/>
         )}
       </div>
     </div>
