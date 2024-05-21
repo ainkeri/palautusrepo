@@ -65,26 +65,26 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
-         setBlogs(blogs.concat(returnedBlog))
-         console.log(returnedBlog)
-         setErrorMessage(
+        setBlogs(blogs.concat(returnedBlog))
+        console.log(returnedBlog)
+        setErrorMessage(
           `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
-         )
-         setTimeout(() => {
-         setErrorMessage(null)
-         }, 5000)
-       })
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
   }
 
   const addLike = id => {
     const blog = blogs.find(b => b.id === id)
-    const likedBlog = { ...blog, likes: blog.likes + 1}
+    const likedBlog = { ...blog, likes: blog.likes + 1 }
 
     blogService
       .update(id, likedBlog)
-        .then(returnedBlog => {
-          setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
-        })
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+      })
   }
 
   const removeBlog = id => {
@@ -93,7 +93,7 @@ const App = () => {
     console.log(blog)
 
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-        blogService
+      blogService
         .deleteBlog(id)
         .then(() => {
           setBlogs(blogs.filter(b => b.id !== id))
@@ -101,7 +101,7 @@ const App = () => {
         .catch(error => {
           console.log(error.response)
         })
-      }
+    }
   }
 
   const loginForm = () => (
@@ -111,7 +111,7 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           username
-            <input
+          <input
             type='text'
             value={username}
             name='Username'
@@ -120,7 +120,7 @@ const App = () => {
         </div>
         <div>
           password
-            <input
+          <input
             type='password'
             value={password}
             name='Password'
@@ -149,10 +149,10 @@ const App = () => {
       </div>
 
       <div>
-        {blogs.map(blog => 
-          <Blog 
-            key={blog.id} 
-            blog={blog} 
+        {blogs.map(blog =>
+          <Blog
+            key={blog.id}
+            blog={blog}
             blogAdder={blog.user}
             user={user.username}
             addLikeTo={() => addLike(blog.id)}
