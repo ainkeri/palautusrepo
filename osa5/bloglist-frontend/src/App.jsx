@@ -66,6 +66,7 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
          setBlogs(blogs.concat(returnedBlog))
+         console.log(returnedBlog)
          setErrorMessage(
           `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
          )
@@ -84,6 +85,23 @@ const App = () => {
         .then(returnedBlog => {
           setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
         })
+  }
+
+  const removeBlog = id => {
+    const blog = blogs.find(b => b.id === id)
+
+    console.log(blog)
+
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+        blogService
+        .deleteBlog(id)
+        .then(() => {
+          setBlogs(blogs.filter(b => b.id !== id))
+        })
+        .catch(error => {
+          console.log(error.response)
+        })
+      }
   }
 
   const loginForm = () => (
@@ -135,8 +153,10 @@ const App = () => {
           <Blog 
             key={blog.id} 
             blog={blog} 
-            user={blog.user} 
-            addLikeTo={() => addLike(blog.id)}/>
+            blogAdder={blog.user}
+            user={user.username}
+            addLikeTo={() => addLike(blog.id)}
+            removeBlogFrom={() => removeBlog(blog.id)}/>
         )}
       </div>
     </div>
