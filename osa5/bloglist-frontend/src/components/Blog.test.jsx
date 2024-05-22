@@ -43,4 +43,29 @@ test('at start blog info is not displayed', async () => {
   expect(div).not.toHaveStyle('display: none')
 })
 
-//test('after clicking button, all blog info is displayed')
+test('clicking like button twice calls event handler twice', async () => {
+  const blog = {
+    title: 'This title is rendered',
+    author: 'This is an author',
+    url: 'This is an url',
+    likes: 300,
+    user: {
+      id: '239i293823',
+      name: 'testingname',
+      username: 'testingusername'
+    }
+  }
+
+  const mockHandler = vi.fn()
+
+  render(
+    <Blog blog={blog} addLikeTo={mockHandler} />
+  )
+
+  const user = userEvent.setup()
+  const likeButton = screen.getByText('like')
+  await user.click(likeButton)
+  await user.click(likeButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
+})
