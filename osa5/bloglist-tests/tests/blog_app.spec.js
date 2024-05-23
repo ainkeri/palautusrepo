@@ -11,6 +11,14 @@ describe('Blog app', () => {
       }
     })
 
+    await request.post('http://localhost:3003/api/users', {
+        data: {
+          name: 'Maija Virtanen',
+          username: 'maijavirtanen',
+          password: 'salainen'
+        }
+    })
+
     await page.goto('http://localhost:5173')
   })
 
@@ -95,6 +103,33 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'remove' }).click()
 
         await expect(page.getByText('my another blog unknown againview')).not.toBeVisible()
+    })
+
+    describe('When another person logs in', () => {
+        beforeEach(async ({ page }) => {
+            await page.getByRole('button', { name: 'new blog' }).click()
+            
+            await page.getByTestId('title').fill('my another blog')
+            await page.getByTestId('author').fill('unknown again')
+            await page.getByTestId('url').fill('https://myblogs.com/')
+
+            await page.getByRole('button', { name: 'create' }).click()
+            
+            await expect(page.getByText('a new blog my another blog by unknown again added')).toBeVisible()
+
+            await page.getByRole('button', { name: 'logout' }).click()
+        })
+
+        test.only('remove button is shown only if blog is created by user', async ({  page }) => {            
+            await page.getByTestId('username').fill('maijavirtanen')
+            await page.getByTestId('password').fill('salainen')
+
+            await page.getByRole('button', { name: 'login' }).click()
+
+            await page.getByRole('button', { name: 'view' }).click()
+
+            await expect(page.getByText('remove')).not.toBeVisible()
+        })
     })
   })
 })
