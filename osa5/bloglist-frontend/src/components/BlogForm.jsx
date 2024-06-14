@@ -11,7 +11,7 @@ const BlogForm = ({ createBlog }) => {
     createBlog({
       title: newTitle,
       author: newAuthor,
-      url: newUrl
+      url: newUrl,
     })
 
     setNewTitle('')
@@ -24,40 +24,40 @@ const BlogForm = ({ createBlog }) => {
       <h2>create new</h2>
       <form onSubmit={addBlog}>
         <div>
-                title:
+          title:
           <input
-            data-testid='title'
+            data-testid="title"
             value={newTitle}
-            onChange={event => setNewTitle(event.target.value)}
-            placeholder='write title here'
+            onChange={(event) => setNewTitle(event.target.value)}
+            placeholder="write title here"
           />
         </div>
         <div>
-                author:
+          author:
           <input
-            data-testid='author'
+            data-testid="author"
             value={newAuthor}
-            onChange={event => setNewAuthor(event.target.value)}
-            placeholder='write author here'
+            onChange={(event) => setNewAuthor(event.target.value)}
+            placeholder="write author here"
           />
         </div>
         <div>
-                url:
+          url:
           <input
-            data-testid='url'
+            data-testid="url"
             value={newUrl}
-            onChange={event => setNewUrl(event.target.value)}
-            placeholder='write url here'
+            onChange={(event) => setNewUrl(event.target.value)}
+            placeholder="write url here"
           />
         </div>
-        <button type='submit'>create</button>
+        <button type="submit">create</button>
       </form>
     </div>
   )
 }
 
 BlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired
+  createBlog: PropTypes.func.isRequired,
 }
 
 export default BlogForm

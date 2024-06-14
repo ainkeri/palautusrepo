@@ -8,8 +8,8 @@ test('renders content', () => {
     user: {
       id: '239i293823',
       name: 'testingname',
-      username: 'testingusername'
-    }
+      username: 'testingusername',
+    },
   }
 
   render(<Blog blog={blog} />)
@@ -28,8 +28,8 @@ test('at start blog info is not displayed', async () => {
     user: {
       id: '239i293823',
       name: 'testingname',
-      username: 'testingusername'
-    }
+      username: 'testingusername',
+    },
   }
 
   const { container } = render(<Blog blog={blog} />)
@@ -52,15 +52,13 @@ test('clicking like button twice calls event handler twice', async () => {
     user: {
       id: '239i293823',
       name: 'testingname',
-      username: 'testingusername'
-    }
+      username: 'testingusername',
+    },
   }
 
   const mockHandler = vi.fn()
 
-  render(
-    <Blog blog={blog} addLikeTo={mockHandler} />
-  )
+  render(<Blog blog={blog} addLikeTo={mockHandler} />)
 
   const user = userEvent.setup()
   const likeButton = screen.getByText('like')

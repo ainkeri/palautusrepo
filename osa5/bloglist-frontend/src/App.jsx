@@ -16,9 +16,7 @@ const App = () => {
   const [rejectedMessage, setRejectedMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
@@ -35,12 +33,11 @@ const App = () => {
 
     try {
       const user = await loginService.login({
-        username, password,
+        username,
+        password,
       })
 
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
       setUser(user)
@@ -62,33 +59,29 @@ const App = () => {
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisiblity()
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        console.log(returnedBlog)
-        setErrorMessage(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      })
+    blogService.create(blogObject).then((returnedBlog) => {
+      setBlogs(blogs.concat(returnedBlog))
+      console.log(returnedBlog)
+      setErrorMessage(
+        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    })
   }
 
-  const addLike = id => {
-    const blog = blogs.find(b => b.id === id)
+  const addLike = (id) => {
+    const blog = blogs.find((b) => b.id === id)
     const likedBlog = { ...blog, likes: blog.likes + 1 }
 
-    blogService
-      .update(id, likedBlog)
-      .then(returnedBlog => {
-        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
-      })
+    blogService.update(id, likedBlog).then((returnedBlog) => {
+      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
+    })
   }
 
-  const removeBlog = id => {
-    const blog = blogs.find(b => b.id === id)
+  const removeBlog = (id) => {
+    const blog = blogs.find((b) => b.id === id)
 
     console.log(blog)
 
@@ -96,9 +89,9 @@ const App = () => {
       blogService
         .deleteBlog(id)
         .then(() => {
-          setBlogs(blogs.filter(b => b.id !== id))
+          setBlogs(blogs.filter((b) => b.id !== id))
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error.response)
         })
     }
@@ -112,24 +105,24 @@ const App = () => {
         <div>
           username
           <input
-            data-testid='username'
-            type='text'
+            data-testid="username"
+            type="text"
             value={username}
-            name='Username'
+            name="Username"
             onChange={({ target }) => setUsername(target.value)}
           />
         </div>
         <div>
           password
           <input
-            data-testid='password'
-            type='password'
+            data-testid="password"
+            type="password"
             value={password}
-            name='Password'
+            name="Password"
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type='submit'>login</button>
+        <button type="submit">login</button>
       </form>
     </div>
   )
@@ -139,26 +132,29 @@ const App = () => {
   const blogForm = () => (
     <div>
       <h2>blogs</h2>
-      <Notification message={errorMessage} rejected={rejectedMessage}/>
+      <Notification message={errorMessage} rejected={rejectedMessage} />
       <div>
-        <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
+        <p>
+          {user.name} logged in <button onClick={handleLogout}>logout</button>
+        </p>
       </div>
 
       <div>
-        <Togglable buttonLabel='new blog' ref={blogFormRef}>
+        <Togglable buttonLabel="new blog" ref={blogFormRef}>
           <BlogForm createBlog={addBlog} />
         </Togglable>
       </div>
 
       <div>
-        {blogs.map(blog =>
+        {blogs.map((blog) => (
           <Blog
             key={blog.id}
             blog={blog}
             user={user.username}
             addLikeTo={() => addLike(blog.id)}
-            removeBlogFrom={() => removeBlog(blog.id)}/>
-        )}
+            removeBlogFrom={() => removeBlog(blog.id)}
+          />
+        ))}
       </div>
     </div>
   )
