@@ -3,16 +3,18 @@ const baseUrl = '/api/blogs'
 
 let token = null
 
-const setToken = newToken => {
+const setToken = (newToken) => {
   token = `Bearer ${newToken}`
 }
 
 const getAll = () => {
   const request = axios.get(baseUrl)
-  return request.then(response => response.data.sort((a, b) => a.likes - b.likes).reverse())
+  return request.then((response) =>
+    response.data.sort((a, b) => a.likes - b.likes).reverse()
+  )
 }
 
-const create = async newObject => {
+const create = async (newObject) => {
   const config = {
     headers: { Authorization: token },
   }
@@ -26,7 +28,7 @@ const update = async (id, newObject) => {
   return request.data
 }
 
-const deleteBlog = async id => {
+const deleteBlog = async (id) => {
   const config = {
     headers: { Authorization: token },
   }

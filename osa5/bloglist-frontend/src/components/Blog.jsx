@@ -6,7 +6,7 @@ const Blog = ({ blog, user, addLikeTo, removeBlogFrom }) => {
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
+    marginBottom: 5,
   }
 
   const [visible, setVisible] = useState(false)
@@ -30,7 +30,7 @@ const Blog = ({ blog, user, addLikeTo, removeBlogFrom }) => {
         {blog.title} {blog.author}
         <button onClick={toggleVisiblity}>view</button>
       </div>
-      <div style={showWhenVisible} className='togglableContent'>
+      <div style={showWhenVisible} className="togglableContent">
         {blog.title} {blog.author}
         <button onClick={toggleVisiblity}>hide</button>
         <div>{blog.url}</div>
@@ -42,7 +42,7 @@ const Blog = ({ blog, user, addLikeTo, removeBlogFrom }) => {
         {user === blog.user.username && deletionButton()}
       </div>
     </div>
-  )}
+  )
+}
 
 export default Blog
-
