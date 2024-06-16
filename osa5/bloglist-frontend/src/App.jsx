@@ -3,17 +3,20 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import './index.css'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import { setNotification } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
+  const dispatch = useDispatch()
+
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [rejectedMessage, setRejectedMessage] = useState(null)
+  //const [errorMessage, setErrorMessage] = useState(null)
+  //const [rejectedMessage, setRejectedMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -44,11 +47,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setRejectedMessage('wrong username or password')
-      console.log(errorMessage)
-      setTimeout(() => {
-        setRejectedMessage(null)
-      }, 5000)
+      dispatch(setNotification('wrong username or password', 5))
     }
   }
 
@@ -62,12 +61,12 @@ const App = () => {
     blogService.create(blogObject).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog))
       console.log(returnedBlog)
-      setErrorMessage(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      dispatch(
+        setNotification(
+          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+          5
+        )
       )
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
     })
   }
 
@@ -100,7 +99,7 @@ const App = () => {
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
-      <Notification message={errorMessage} rejected={rejectedMessage} />
+      <Notification />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -132,7 +131,7 @@ const App = () => {
   const blogForm = () => (
     <div>
       <h2>blogs</h2>
-      <Notification message={errorMessage} rejected={rejectedMessage} />
+      <Notification />
       <div>
         <p>
           {user.name} logged in <button onClick={handleLogout}>logout</button>
