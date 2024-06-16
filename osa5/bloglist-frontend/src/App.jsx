@@ -7,19 +7,20 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
+import { createBlog, initializeBlogs } from './reducers/blogReducer'
+import { useSelector } from 'react-redux'
 
 const App = () => {
   const dispatch = useDispatch()
 
-  const [blogs, setBlogs] = useState([])
+  const allBlogs = useSelector((state) => state.blogs)
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  //const [errorMessage, setErrorMessage] = useState(null)
-  //const [rejectedMessage, setRejectedMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
@@ -58,16 +59,13 @@ const App = () => {
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisiblity()
-    blogService.create(blogObject).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog))
-      console.log(returnedBlog)
-      dispatch(
-        setNotification(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-          5
-        )
+    dispatch(createBlog(blogObject))
+    dispatch(
+      setNotification(
+        `a new blog ${blogObject.title} by ${blogObject.author} added`,
+        5
       )
-    })
+    )
   }
 
   const addLike = (id) => {
@@ -145,7 +143,7 @@ const App = () => {
       </div>
 
       <div>
-        {blogs.map((blog) => (
+        {allBlogs.map((blog) => (
           <Blog
             key={blog.id}
             blog={blog}
