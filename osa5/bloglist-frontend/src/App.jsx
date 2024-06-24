@@ -13,16 +13,17 @@ import {
   setLikes,
   removeBlog,
 } from './reducers/blogReducer'
+import { setLogin } from './reducers/userReducer'
 import { useSelector } from 'react-redux'
 
 const App = () => {
   const dispatch = useDispatch()
 
   const allBlogs = useSelector((state) => state.blogs)
+  const user = useSelector((state) => state.user)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -32,7 +33,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setLogin(user))
       blogService.setToken(user.token)
     }
   }, [])
@@ -49,7 +50,8 @@ const App = () => {
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
-      setUser(user)
+
+      dispatch(setLogin(user))
       setUsername('')
       setPassword('')
     } catch (exception) {
