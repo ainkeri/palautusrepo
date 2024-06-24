@@ -7,7 +7,12 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
-import { createBlog, initializeBlogs } from './reducers/blogReducer'
+import {
+  createBlog,
+  initializeBlogs,
+  likeBlog,
+  setLikes,
+} from './reducers/blogReducer'
 import { useSelector } from 'react-redux'
 
 const App = () => {
@@ -69,12 +74,7 @@ const App = () => {
   }
 
   const addLike = (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    const likedBlog = { ...blog, likes: blog.likes + 1 }
-
-    blogService.update(id, likedBlog).then((returnedBlog) => {
-      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
-    })
+    dispatch(setLikes(id))
   }
 
   const removeBlog = (id) => {
