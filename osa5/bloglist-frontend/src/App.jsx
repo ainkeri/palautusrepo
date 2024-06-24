@@ -10,8 +10,8 @@ import { useDispatch } from 'react-redux'
 import {
   createBlog,
   initializeBlogs,
-  likeBlog,
   setLikes,
+  removeBlog,
 } from './reducers/blogReducer'
 import { useSelector } from 'react-redux'
 
@@ -74,23 +74,12 @@ const App = () => {
   }
 
   const addLike = (id) => {
-    dispatch(setLikes(id))
+    dispatch(setLikes(id, allBlogs))
   }
 
-  const removeBlog = (id) => {
-    const blog = blogs.find((b) => b.id === id)
-
-    console.log(blog)
-
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      blogService
-        .deleteBlog(id)
-        .then(() => {
-          setBlogs(blogs.filter((b) => b.id !== id))
-        })
-        .catch((error) => {
-          console.log(error.response)
-        })
+  const deleteBlog = (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      dispatch(removeBlog(blog.id))
     }
   }
 
@@ -149,7 +138,7 @@ const App = () => {
             blog={blog}
             user={user.username}
             addLikeTo={() => addLike(blog.id)}
-            removeBlogFrom={() => removeBlog(blog.id)}
+            removeBlogFrom={() => deleteBlog(blog)}
           />
         ))}
       </div>

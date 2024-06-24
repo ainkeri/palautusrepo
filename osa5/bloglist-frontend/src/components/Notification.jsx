@@ -31,6 +31,9 @@ const Notification = () => {
   if (notif === 'wrong username or password')
     return <div style={fail}>{notif}</div>
 
+  if (notif === 'blog already removed from server')
+    return <div style={fail}>{notif}</div>
+
   return <div style={success}>{notif}</div>
 }
 
