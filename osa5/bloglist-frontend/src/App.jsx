@@ -5,6 +5,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import Users from './components/Users'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 import {
@@ -15,6 +16,13 @@ import {
 } from './reducers/blogReducer'
 import { setLogin } from './reducers/userReducer'
 import { useSelector } from 'react-redux'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+} from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -147,11 +155,33 @@ const App = () => {
     </div>
   )
 
-  return (
+  const pageHeader = () => (
     <div>
-      {!user && loginForm()}
-      {user && blogForm()}
+      <h2>blogs</h2>
+      <Notification />
+      <div>
+        <p>
+          {user.name} logged in <button onClick={handleLogout}>logout</button>
+        </p>
+      </div>
     </div>
+  )
+
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/users"
+          element={
+            <div>
+              {pageHeader()}
+              <Users />
+            </div>
+          }
+        />
+        <Route path="/" element={user ? blogForm() : loginForm()} />
+      </Routes>
+    </Router>
   )
 }
 
