@@ -23,6 +23,8 @@ import {
   Link,
   Navigate,
 } from 'react-router-dom'
+import { initializeUsers } from './reducers/usersReducer'
+import UserBlogs from './components/UserBlogs'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -35,6 +37,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
   }, [])
 
   useEffect(() => {
@@ -176,6 +179,15 @@ const App = () => {
             <div>
               {pageHeader()}
               <Users />
+            </div>
+          }
+        />
+        <Route
+          path="/users/:id"
+          element={
+            <div>
+              {pageHeader()}
+              <UserBlogs />
             </div>
           }
         />
