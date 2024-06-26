@@ -8,12 +8,7 @@ import BlogForm from './components/BlogForm'
 import Users from './components/Users'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
-import {
-  createBlog,
-  initializeBlogs,
-  setLikes,
-  removeBlog,
-} from './reducers/blogReducer'
+import { createBlog, initializeBlogs } from './reducers/blogReducer'
 import { setLogin } from './reducers/userReducer'
 import { useSelector } from 'react-redux'
 import {
@@ -25,6 +20,7 @@ import {
 } from 'react-router-dom'
 import { initializeUsers } from './reducers/usersReducer'
 import UserBlogs from './components/UserBlogs'
+import BlogInfo from './components/BlogInfo'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -86,16 +82,6 @@ const App = () => {
     )
   }
 
-  const addLike = (id) => {
-    dispatch(setLikes(id, allBlogs))
-  }
-
-  const deleteBlog = (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      dispatch(removeBlog(blog.id))
-    }
-  }
-
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
@@ -146,13 +132,7 @@ const App = () => {
 
       <div>
         {allBlogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            user={user.username}
-            addLikeTo={() => addLike(blog.id)}
-            removeBlogFrom={() => deleteBlog(blog)}
-          />
+          <Blog key={blog.id} blog={blog} user={user.username} />
         ))}
       </div>
     </div>
@@ -170,15 +150,26 @@ const App = () => {
     </div>
   )
 
+  const padding = {
+    padding: 5,
+  }
+
   return (
     <Router>
+      <div>
+        {user && (
+          <Link style={padding} to="/users">
+            users
+          </Link>
+        )}
+      </div>
       <Routes>
         <Route
           path="/users"
           element={
             <div>
               {pageHeader()}
-              <Users />
+              {user ? <Users /> : <Navigate replace to="/login" />}
             </div>
           }
         />
@@ -187,11 +178,27 @@ const App = () => {
           element={
             <div>
               {pageHeader()}
-              <UserBlogs />
+              {user ? <UserBlogs /> : <Navigate replace to="/login" />}
             </div>
           }
         />
-        <Route path="/" element={user ? blogForm() : loginForm()} />
+        <Route
+          path="/blogs/:id"
+          element={
+            <div>
+              {pageHeader()}
+              {<BlogInfo user={user} />}
+            </div>
+          }
+        />
+        <Route
+          path="/login"
+          element={!user ? loginForm() : <Navigate replace to="/" />}
+        />
+        <Route
+          path="/"
+          element={user ? blogForm() : <Navigate replace to="/login" />}
+        />
       </Routes>
     </Router>
   )

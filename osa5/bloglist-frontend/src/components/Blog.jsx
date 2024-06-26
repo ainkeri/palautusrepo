@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
-const Blog = ({ blog, user, addLikeTo, removeBlogFrom }) => {
+const Blog = ({ blog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -9,38 +9,11 @@ const Blog = ({ blog, user, addLikeTo, removeBlogFrom }) => {
     marginBottom: 5,
   }
 
-  const [visible, setVisible] = useState(false)
-
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisiblity = () => {
-    setVisible(!visible)
-  }
-
-  const deletionButton = () => (
-    <div>
-      <button onClick={removeBlogFrom}>remove</button>
-    </div>
-  )
-
   return (
     <div style={blogStyle}>
-      <div style={hideWhenVisible}>
+      <Link to={`/blogs/${blog.id}`}>
         {blog.title} {blog.author}
-        <button onClick={toggleVisiblity}>view</button>
-      </div>
-      <div style={showWhenVisible} className="togglableContent">
-        {blog.title} {blog.author}
-        <button onClick={toggleVisiblity}>hide</button>
-        <div>{blog.url}</div>
-        <div>
-          likes {blog.likes}
-          <button onClick={addLikeTo}>like</button>
-        </div>
-        {blog.user.name}
-        {user === blog.user.username && deletionButton()}
-      </div>
+      </Link>
     </div>
   )
 }
