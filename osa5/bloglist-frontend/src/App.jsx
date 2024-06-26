@@ -116,16 +116,9 @@ const App = () => {
 
   const blogForm = () => (
     <div>
-      <h2>blogs</h2>
       <Notification />
       <div>
-        <p>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </p>
-      </div>
-
-      <div>
-        <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <Togglable buttonLabel="create blog" ref={blogFormRef}>
           <BlogForm createBlog={addBlog} />
         </Togglable>
       </div>
@@ -134,18 +127,6 @@ const App = () => {
         {allBlogs.map((blog) => (
           <Blog key={blog.id} blog={blog} user={user.username} />
         ))}
-      </div>
-    </div>
-  )
-
-  const pageHeader = () => (
-    <div>
-      <h2>blogs</h2>
-      <Notification />
-      <div>
-        <p>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </p>
       </div>
     </div>
   )
@@ -162,32 +143,40 @@ const App = () => {
             users
           </Link>
         )}
+        {user && (
+          <Link style={padding} to="/">
+            blogs
+          </Link>
+        )}
+        {user && (
+          <span>
+            {user.name} logged in <button onClick={handleLogout}>logout</button>
+          </span>
+        )}
       </div>
+      <div>{user && <h2>blog app</h2>}</div>
       <Routes>
         <Route
           path="/users"
           element={
-            <div>
-              {pageHeader()}
-              {user ? <Users /> : <Navigate replace to="/login" />}
-            </div>
+            <div>{user ? <Users /> : <Navigate replace to="/login" />}</div>
           }
         />
         <Route
           path="/users/:id"
           element={
-            <div>
-              {pageHeader()}
-              {user ? <UserBlogs /> : <Navigate replace to="/login" />}
-            </div>
+            <div>{user ? <UserBlogs /> : <Navigate replace to="/login" />}</div>
           }
         />
         <Route
           path="/blogs/:id"
           element={
             <div>
-              {pageHeader()}
-              {<BlogInfo user={user} />}
+              {user ? (
+                <BlogInfo user={user} />
+              ) : (
+                <Navigate replace to="/login" />
+              )}
             </div>
           }
         />
