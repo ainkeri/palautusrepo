@@ -6,7 +6,6 @@ const Notification = () => {
   if (notif.length === 0) {
     return null
   }
-  console.log(notif)
 
   const success = {
     color: 'green',

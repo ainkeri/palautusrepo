@@ -1,6 +1,8 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
 import { setLikes, removeBlog } from '../reducers/blogReducer'
+import { createComment, initializeComments } from '../reducers/commentReducer'
 
 const BlogInfo = () => {
   const dispatch = useDispatch()
@@ -12,8 +14,25 @@ const BlogInfo = () => {
 
   const userNow = useSelector((state) => state.user)
 
+  useEffect(() => {
+    dispatch(initializeComments(id))
+  }, [])
+
+  const comments = useSelector((state) => state.comments)
+
+  if (!blog) {
+    return null
+  }
+
   const addLike = () => {
     dispatch(setLikes(blog.id, blogs))
+  }
+
+  const commentBlog = (event) => {
+    event.preventDefault()
+    const comment = event.target.comment.value
+    event.target.comment.value = ''
+    dispatch(createComment(blog.id, { content: comment }))
   }
 
   const deleteBlog = () => {
@@ -39,10 +58,16 @@ const BlogInfo = () => {
       </div>
       <div>
         <h3>comments</h3>
-        {blog.comments.map((comment) => (
+        {comments.map((comment) => (
           <li key={comment.id}>{comment.content}</li>
         ))}
       </div>
+      <form onSubmit={commentBlog}>
+        <div>
+          <input name="comment" />
+          <button type="submit">comment</button>
+        </div>
+      </form>
     </div>
   )
 }
