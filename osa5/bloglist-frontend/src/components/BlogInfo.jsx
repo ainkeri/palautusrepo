@@ -3,6 +3,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
 import { setLikes, removeBlog } from '../reducers/blogReducer'
 import { createComment, initializeComments } from '../reducers/commentReducer'
+import { Form, Button } from 'react-bootstrap'
 
 const BlogInfo = () => {
   const dispatch = useDispatch()
@@ -43,31 +44,40 @@ const BlogInfo = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h2>{blog.title}</h2>
       <a href="url">{blog.url}</a>
       <div>
         {blog.likes} likes
-        <button onClick={addLike}>like</button>
+        <Button variant="light" onClick={addLike}>
+          like
+        </Button>
       </div>
       <div>added by {blog.user.username}</div>
       <div>
         {userNow.username === blog.user.username && (
-          <button onClick={deleteBlog}>remove</button>
+          <Button variant="dark" onClick={deleteBlog}>
+            remove
+          </Button>
         )}
       </div>
+      <p></p>
       <div>
         <h3>comments</h3>
         {comments.map((comment) => (
           <li key={comment.id}>{comment.content}</li>
         ))}
       </div>
-      <form onSubmit={commentBlog}>
-        <div>
-          <input name="comment" />
-          <button type="submit">comment</button>
-        </div>
-      </form>
+      <p></p>
+      <Form onSubmit={commentBlog}>
+        <Form.Group className="align-items-center">
+          <Form.Control name="comment" />
+        </Form.Group>
+        <p></p>
+        <Button variant="primary" type="submit">
+          send
+        </Button>
+      </Form>
     </div>
   )
 }

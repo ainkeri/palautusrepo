@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux'
+import { Alert } from 'react-bootstrap'
 
 const Notification = () => {
   const notif = useSelector((state) => state.notification)
@@ -28,12 +29,17 @@ const Notification = () => {
   }
 
   if (notif === 'wrong username or password')
-    return <div style={fail}>{notif}</div>
+    return (
+      <Alert variant="fail" style={fail}>
+        {notif}
+      </Alert>
+    )
 
-  if (notif === 'blog already removed from server')
-    return <div style={fail}>{notif}</div>
-
-  return <div style={success}>{notif}</div>
+  return (
+    <Alert variant="success" style={success}>
+      {notif}
+    </Alert>
+  )
 }
 
 export default Notification

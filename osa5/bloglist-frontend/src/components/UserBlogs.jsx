@@ -11,8 +11,8 @@ const UserBlogs = () => {
   }
 
   return (
-    <div>
-      <h2>{user.name}</h2>
+    <div className="container">
+      <h3>{user.name}</h3>
       <h3>added blogs</h3>
       <div>
         {user.blogs.map((b) => (
