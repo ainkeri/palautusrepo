@@ -171,13 +171,7 @@ const App = () => {
         <Route
           path="/blogs/:id"
           element={
-            <div>
-              {user ? (
-                <BlogInfo user={user} />
-              ) : (
-                <Navigate replace to="/login" />
-              )}
-            </div>
+            <div>{user ? <BlogInfo /> : <Navigate replace to="/login" />}</div>
           }
         />
         <Route

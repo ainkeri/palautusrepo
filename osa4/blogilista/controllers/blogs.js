@@ -86,7 +86,9 @@ blogRouter.put("/:id", async (request, response) => {
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
     new: true,
-  }).populate("user", { username: 1, name: 1, id: 1 });
+  })
+    .populate("user", { username: 1, name: 1, id: 1 })
+    .populate("comments", { content: 1, id: 1 });
 
   response.json(updatedBlog);
 });
@@ -105,7 +107,7 @@ blogRouter.post("/:id/comments", async (request, response) => {
   }
 
   const savedComment = await comment.save();
-  console.log(savedComment);
+
   blog.comments = blog.comments.concat(savedComment._id);
   await blog.save();
 
