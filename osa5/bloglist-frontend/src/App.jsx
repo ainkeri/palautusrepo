@@ -21,6 +21,9 @@ import {
 import { initializeUsers } from './reducers/usersReducer'
 import UserBlogs from './components/UserBlogs'
 import BlogInfo from './components/BlogInfo'
+import { Table, Form, Button, Navbar, Nav } from 'react-bootstrap'
+
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -83,39 +86,43 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <div>
-      <h2>log in to application</h2>
+    <div className="container">
+      <p></p>
+      <h2>Log in to application</h2>
       <Notification />
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
+      <Form onSubmit={handleLogin}>
+        <Form.Group>
+          <Form.Label>username:</Form.Label>
+          <Form.Control
             data-testid="username"
             type="text"
             value={username}
             name="Username"
             onChange={({ target }) => setUsername(target.value)}
           />
-        </div>
-        <div>
-          password
-          <input
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>password:</Form.Label>
+          <Form.Control
             data-testid="password"
             type="password"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
           />
-        </div>
-        <button type="submit">login</button>
-      </form>
+        </Form.Group>
+        <p></p>
+        <Button variant="primary" type="submit">
+          login
+        </Button>
+      </Form>
     </div>
   )
 
   const blogFormRef = useRef()
 
   const blogForm = () => (
-    <div>
+    <div className="container">
       <Notification />
       <div>
         <Togglable buttonLabel="create blog" ref={blogFormRef}>
@@ -123,10 +130,21 @@ const App = () => {
         </Togglable>
       </div>
 
+      <br></br>
+
       <div>
-        {allBlogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} user={user.username} />
-        ))}
+        <Table striped>
+          <tbody>
+            {allBlogs.map((blog) => (
+              <tr key={blog.id}>
+                <td>
+                  <Blog blog={blog} user={user.username} />
+                </td>
+                <td>{blog.user.username}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </div>
     </div>
   )
@@ -137,24 +155,38 @@ const App = () => {
 
   return (
     <Router>
-      <div>
-        {user && (
-          <Link style={padding} to="/users">
-            users
-          </Link>
-        )}
-        {user && (
-          <Link style={padding} to="/">
-            blogs
-          </Link>
-        )}
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link href="#" as="span">
+              {user && (
+                <Link style={padding} to="/">
+                  blogs
+                </Link>
+              )}
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              {user && (
+                <Link style={padding} to="/users">
+                  users
+                </Link>
+              )}
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+      <div className="container">
         {user && (
           <span>
-            {user.name} logged in <button onClick={handleLogout}>logout</button>
+            {user.name} logged in{' '}
+            <Button variant="light" onClick={handleLogout}>
+              logout
+            </Button>
           </span>
         )}
       </div>
-      <div>{user && <h2>blog app</h2>}</div>
+      <div className="container">{user && <h1>Blog app</h1>}</div>
       <Routes>
         <Route
           path="/users"
