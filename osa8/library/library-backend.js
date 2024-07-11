@@ -156,7 +156,7 @@ const resolvers = {
       }
 
       const updatedAuthor = { ...author, born: args.born };
-      authors = authors.map((a) => (a.name === a.name ? updatedAuthor : a));
+      authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a));
       return updatedAuthor;
     },
   },
