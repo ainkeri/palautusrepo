@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const Book = require("./models/book");
 const Author = require("./models/author");
+const { GraphQLError } = require("graphql");
 
 require("dotenv").config();
 
@@ -98,13 +99,35 @@ const resolvers = {
           id: uuid(),
           born: null,
         });
-        await author.save();
+        try {
+          await author.save();
+        } catch (error) {
+          throw new GraphQLError("Saving person failed", {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              invalidArgs: args.author,
+              error,
+            },
+          });
+        }
       } else {
         author = authorExists;
       }
 
       const book = new Book({ ...args, author: author });
-      await book.save();
+
+      try {
+        await book.save();
+      } catch (error) {
+        throw new GraphQLError("Saving book failed", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.title,
+            error,
+          },
+        });
+      }
+
       return book;
     },
     editAuthor: async (root, args) => {
