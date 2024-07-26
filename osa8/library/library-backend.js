@@ -97,7 +97,8 @@ const resolvers = {
     },
     allBooks: async (root, args) => {
       if (!args.author && !args.genres) {
-        return Book.find({});
+        const book = await Book.find({}).populate("author");
+        return book;
       }
       if (!args.genres) {
         const author = await Author.findOne({ name: args.author });
@@ -107,6 +108,7 @@ const resolvers = {
         return Book.find({ genres: { $lte: args.genres } });
       }
       const author = await Author.findOne({ name: args.author });
+      console.log(author);
       return Book.find({ author: author, genres: { $lte: args.genres } });
     },
     me: (root, args, context) => {
