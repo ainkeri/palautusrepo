@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import Select from "react-select";
 import { UPDATE_AUTHOR, ALL_AUTHORS } from "../queries";
 
-const Authors = ({ show, authors }) => {
+const Authors = ({ show, authors, token }) => {
   const [born, setBorn] = useState("");
   const [selectedAuthor, setSelectedAuthor] = useState(null);
 
@@ -34,6 +34,29 @@ const Authors = ({ show, authors }) => {
     value: a.name,
     label: a.name,
   }));
+
+  if (!token)
+    return (
+      <div>
+        <h2>authors</h2>
+        <table>
+          <tbody>
+            <tr>
+              <th></th>
+              <th>born</th>
+              <th>books</th>
+            </tr>
+            {authors.map((a) => (
+              <tr key={a.name}>
+                <td>{a.name}</td>
+                <td>{a.born}</td>
+                <td>{a.bookCount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
 
   return (
     <div>

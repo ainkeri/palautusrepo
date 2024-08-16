@@ -155,6 +155,7 @@ const resolvers = {
       try {
         await book.save();
       } catch (error) {
+        console.log("Error saving book:", error.message);
         throw new GraphQLError("Saving book failed", {
           extensions: {
             code: "BAD_USER_INPUT",
