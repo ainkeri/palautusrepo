@@ -3,8 +3,9 @@ import LoginForm from "./components/LoginForm";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
+import Recommendations from "./components/Recommendations";
 import { useApolloClient, useQuery } from "@apollo/client";
-import { ALL_AUTHORS, ALL_BOOKS } from "./queries";
+import { ALL_AUTHORS, ALL_BOOKS, ME } from "./queries";
 
 const App = () => {
   const [token, setToken] = useState(null);
@@ -12,6 +13,7 @@ const App = () => {
   const [page, setPage] = useState("authors");
   const authors = useQuery(ALL_AUTHORS);
   const books = useQuery(ALL_BOOKS);
+  const user = useQuery(ME);
   const client = useApolloClient();
 
   if (authors.loading) {
@@ -66,6 +68,7 @@ const App = () => {
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
         <button onClick={() => setPage("add")}>add book</button>
+        <button onClick={() => setPage("recommend")}>recommend</button>
         <button onClick={logout}>logout</button>
       </div>
 
@@ -78,6 +81,12 @@ const App = () => {
       <Books show={page === "books"} books={books.data.allBooks} />
 
       <NewBook show={page === "add"} />
+
+      <Recommendations
+        show={page === "recommend"}
+        user={user.data}
+        books={books.data.allBooks}
+      />
     </div>
   );
 };
