@@ -27,6 +27,7 @@ const NewBook = (props) => {
       published: publishedInt,
       genres: genres.length > 0 ? genres : [],
     });
+    console.log(genres.length);
     try {
       console.log("Creating book...");
       await createBook({
