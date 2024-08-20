@@ -21,12 +21,6 @@ const NewBook = (props) => {
     event.preventDefault();
     const publishedInt = parseInt(published);
 
-    console.log({
-      title,
-      author,
-      published: publishedInt,
-      genres: genres.length > 0 ? genres : [],
-    });
     console.log(genres.length);
     try {
       console.log("Creating book...");
