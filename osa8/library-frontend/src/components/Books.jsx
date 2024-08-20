@@ -14,7 +14,7 @@ const Books = ({ show, books }) => {
   }
 
   if (result.loading) {
-    return <div>loading...</div>;
+    return <div>loading....</div>;
   }
 
   const displayedBooks =
