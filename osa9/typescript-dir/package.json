@@ -9,5 +9,8 @@
   },
   "author": "Inkeri Ahlström",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.9.0"
+  }
 }
