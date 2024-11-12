@@ -16,14 +16,14 @@ const parseArguments2 = (args: string[]): ExerciseDays => {
   if (args.length < 4) throw new Error("Not enough arguments");
   if (args.length > 15) throw new Error("Too many arguments");
 
-  let argsSliced = args.slice(2);
-  let numberDays = argsSliced.map((d) => {
+  const argsSliced = args.slice(2);
+  const numberDays = argsSliced.map((d) => {
     return Number(d);
   });
   console.log(argsSliced);
   const arr: number[] = [];
 
-  for (var i = 0; i < argsSliced.length; i++) {
+  for (let i = 0; i < argsSliced.length; i++) {
     if (!isNaN(numberDays[i])) {
       arr.push(numberDays[i]);
     } else {
@@ -36,7 +36,7 @@ const parseArguments2 = (args: string[]): ExerciseDays => {
 };
 
 const calculateExercises = (trainingDays: number[]): Result => {
-  let targetGoal = trainingDays[0];
+  const targetGoal = trainingDays[0];
   let sumOfTrainingDays = 0;
   let sumHours = 0;
   let successOrNot = false;
@@ -45,7 +45,7 @@ const calculateExercises = (trainingDays: number[]): Result => {
 
   console.log(trainingDays);
 
-  for (var i = 0; i < trainingDays.length; i++) {
+  for (let i = 0; i < trainingDays.length; i++) {
     if (trainingDays[i] > 0) {
       sumOfTrainingDays += 1;
       sumHours += trainingDays[i];
