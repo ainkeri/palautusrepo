@@ -10,40 +10,41 @@ interface Result {
 
 interface ExerciseDays {
   trainingDays: number[];
+  targetVal: number;
 }
 
 const parseArguments2 = (args: string[]): ExerciseDays => {
   if (args.length < 4) throw new Error("Not enough arguments");
   if (args.length > 15) throw new Error("Too many arguments");
 
-  const argsSliced = args.slice(2);
-  const numberDays = argsSliced.map((d) => {
-    return Number(d);
-  });
-  console.log(argsSliced);
-  const arr: number[] = [];
-
-  for (let i = 0; i < argsSliced.length; i++) {
-    if (!isNaN(numberDays[i])) {
-      arr.push(numberDays[i]);
-    } else {
+  const dailyExercises = args.slice(2, args.length - 1).map((arg) => {
+    if (isNaN(Number(arg))) {
       throw new Error("Provided values were not numbers");
     }
+    return Number(arg);
+  });
+
+  const target = Number(args[args.length - 1]);
+  if (isNaN(target)) {
+    throw new Error("Provided target was not a number");
+  } else {
+    return {
+      trainingDays: dailyExercises,
+      targetVal: target,
+    };
   }
-  return {
-    trainingDays: arr,
-  };
 };
 
-const calculateExercises = (trainingDays: number[]): Result => {
-  const targetGoal = trainingDays[0];
+const calculateExercises = (
+  trainingDays: number[],
+  targetVal: number
+): Result => {
+  const targetGoal = targetVal;
   let sumOfTrainingDays = 0;
   let sumHours = 0;
   let successOrNot = false;
   let ratingOf = 0;
   let ratingOfDesc = "";
-
-  console.log(trainingDays);
 
   for (let i = 0; i < trainingDays.length; i++) {
     if (trainingDays[i] > 0) {
@@ -72,8 +73,8 @@ const calculateExercises = (trainingDays: number[]): Result => {
   }
 
   return {
-    periodLength: trainingDays.length - 1,
-    trainingDays: sumOfTrainingDays - 1,
+    periodLength: trainingDays.length,
+    trainingDays: sumOfTrainingDays,
     success: successOrNot,
     rating: ratingOf,
     ratingDescription: ratingOfDesc,
@@ -83,8 +84,8 @@ const calculateExercises = (trainingDays: number[]): Result => {
 };
 
 try {
-  const { trainingDays } = parseArguments2(process.argv);
-  console.log(calculateExercises(trainingDays));
+  const { trainingDays, targetVal } = parseArguments2(process.argv);
+  console.log(calculateExercises(trainingDays, targetVal));
 } catch (error: unknown) {
   let errorMessage = "Something bad happened";
   if (error instanceof Error) {
@@ -92,3 +93,5 @@ try {
   }
   console.log(errorMessage);
 }
+
+export default calculateExercises;
