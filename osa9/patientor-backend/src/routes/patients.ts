@@ -8,7 +8,16 @@ router.get("/", (_req, res) => {
 });
 
 router.post("/", (_req, res) => {
-  res.send("Saving a patient!");
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+  const { name, dateOfBirth, ssn, gender, occupation } = _req.body;
+  const addedPatient = patientService.addPatient({
+    name,
+    dateOfBirth,
+    ssn,
+    gender,
+    occupation,
+  });
+  res.json(addedPatient);
 });
 
 export default router;
