@@ -10,6 +10,7 @@ const App = () => {
   const [weather, setWeather] = useState("");
   const [visibility, setVisibility] = useState("");
   const [comment, setComment] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     getAllDiaries().then((data) => {
@@ -17,27 +18,43 @@ const App = () => {
     });
   }, []);
 
-  const diaryCreation = (event: React.SyntheticEvent) => {
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
+
+  const diaryCreation = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-
-    createDiary({
-      date: date,
-      weather: weather,
-      visibility: visibility,
-      comment: comment,
-    }).then((data) => {
-      setDiaries(diaries.concat(data));
-    });
-
-    setDate("");
-    setWeather("");
-    setVisibility("");
-    setComment("");
+    try {
+      await createDiary({
+        date: date,
+        weather: weather,
+        visibility: visibility,
+        comment: comment,
+      }).then((data) => {
+        setDiaries(diaries.concat(data));
+      });
+      setDate("");
+      setWeather("");
+      setVisibility("");
+      setComment("");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data);
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   return (
     <div>
       <h2>Add new entry</h2>
+      {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
       <div>
         <form onSubmit={diaryCreation}>
           <div>
