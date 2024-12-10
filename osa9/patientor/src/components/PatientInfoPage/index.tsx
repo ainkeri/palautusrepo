@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Patient } from "../../types";
+import { Diagnosis, Patient } from "../../types";
 
 import axios from "axios";
 import { apiBaseUrl } from "../../constants";
 
 import patientService from "../../services/patients";
+import diagnosisService from "../../services/diagnoses";
 
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 
 const PatientInfoPage = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
   const [error, setError] = useState<string>();
   const { id } = useParams<{ id: string }>();
 
@@ -45,8 +47,22 @@ const PatientInfoPage = () => {
     void fetchPatientById();
   }, [id]);
 
+  useEffect(() => {
+    void axios.get<void>(`${apiBaseUrl}/diagnoses`);
+
+    const fetchDiagnosisList = async () => {
+      const diagnosis = await diagnosisService.getAllDiagnoses();
+      setDiagnosis(diagnosis);
+    };
+    void fetchDiagnosisList();
+  }, []);
+
   if (!patient) {
     return <p>Loading patient data...</p>;
+  }
+
+  if (diagnosis.length === 0) {
+    return <p>Loading diagnosis data...</p>;
   }
 
   return (
@@ -70,9 +86,14 @@ const PatientInfoPage = () => {
             {p.date} <i>{p.description}</i>
           </p>
           <ul>
-            {p.diagnosisCodes?.map((d) => (
-              <li key={d}>{d}</li>
-            ))}
+            {p.diagnosisCodes?.map((d) => {
+              const matchingDiagnosis = diagnosis.find((ds) => ds.code === d);
+              return (
+                <li key={d}>
+                  {d}: {matchingDiagnosis ? matchingDiagnosis.name : "Unknown"}
+                </li>
+              );
+            })}
           </ul>
         </div>
       ))}
