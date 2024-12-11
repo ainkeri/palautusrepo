@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Diagnosis, Patient } from "../../types";
+import { Diagnosis, Entry, Patient } from "../../types";
 
 import axios from "axios";
 import { apiBaseUrl } from "../../constants";
@@ -10,6 +10,9 @@ import diagnosisService from "../../services/diagnoses";
 
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
+import HospitalEntry from "./HospitalEntry";
+import HealthCheckEntry from "./HealthCheckEntry";
+import OccupationalHealthcareEntry from "./OccupationalHealthcareEntry";
 
 const PatientInfoPage = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
@@ -80,25 +83,29 @@ const PatientInfoPage = () => {
       <p>ssn: {patient.ssn}</p>
       <p>occupation: {patient.occupation}</p>
       <h3>entries</h3>
-      {patient.entries?.map((p) => (
-        <div key={p.id}>
-          <p>
-            {p.date} <i>{p.description}</i>
-          </p>
-          <ul>
-            {p.diagnosisCodes?.map((d) => {
-              const matchingDiagnosis = diagnosis.find((ds) => ds.code === d);
-              return (
-                <li key={d}>
-                  {d}: {matchingDiagnosis ? matchingDiagnosis.name : "Unknown"}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ))}
+      <div>
+        {patient.entries?.map((entry) => (
+          <EntryDetails key={entry.id} entry={entry} />
+        ))}
+      </div>
     </div>
   );
 };
 
+const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
+  switch (entry.type) {
+    case "Hospital":
+      return <HospitalEntry entry={entry} />;
+    case "OccupationalHealthcare":
+      return <OccupationalHealthcareEntry entry={entry} />;
+    case "HealthCheck":
+      return <HealthCheckEntry entry={entry} />;
+    default:
+      return assertNever(entry);
+  }
+};
+
 export default PatientInfoPage;
+function assertNever(_entry: never): React.ReactNode {
+  throw new Error("Function not implemented.");
+}
