@@ -7,7 +7,6 @@ const app = express();
 const PORT = 3001;
 
 app.use(
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   cors({
     origin: "http://localhost:5173",
   })

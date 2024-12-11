@@ -2,9 +2,15 @@ import { v1 as uuid } from "uuid";
 
 import patientData from "../../data/patients.ts";
 
-import { NonSensitivePatientInfo, Patient, NewPatient } from "../types.ts";
+import {
+  NonSensitivePatientInfo,
+  Patient,
+  NewPatient,
+  Entry,
+  EntryWithoutId,
+} from "../types.ts";
 
-const patients: NonSensitivePatientInfo[] = patientData;
+const patients: Patient[] = patientData;
 
 const getPatients = (): NonSensitivePatientInfo[] => {
   return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
@@ -26,16 +32,36 @@ const addPatient = (entry: NewPatient): Patient => {
   const newPatient = {
     id: id,
     ...entry,
+    entries: [],
   };
-
-  console.log(newPatient);
 
   patients.push(newPatient);
   return newPatient;
+};
+
+const addEntry = (entry: EntryWithoutId, patientId: string): Entry => {
+  const patient = patients.find((p) => p.id === patientId);
+
+  if (!patient?.entries) {
+    throw new Error("Patient not found");
+  }
+
+  const id = uuid();
+
+  const newEntry: Entry = {
+    id: id,
+    ...entry,
+  };
+
+  console.log(newEntry);
+
+  patient.entries.push(newEntry);
+  return newEntry;
 };
 
 export default {
   getPatients,
   getPatientById,
   addPatient,
+  addEntry,
 };
