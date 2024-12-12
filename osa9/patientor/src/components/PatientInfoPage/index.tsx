@@ -82,14 +82,11 @@ const PatientInfoPage = () => {
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         if (e.response?.data && typeof e.response?.data === "object") {
-          const errorData = e.response.data as {
-            error?: string;
-          };
-
-          if (errorData.error) {
-            const message = errorData.error[0] ?? "Valiation error occured.";
-            console.error(`${message.message}`);
-            setError(`${message.message}`);
+          const errorData = e.response.data.error[0];
+          if (errorData) {
+            const message = errorData.message ?? "Valiation error occured.";
+            console.error(`${message}`);
+            setError(`${message}`);
           } else {
             setError("Unrecognized error structure from server.");
           }
@@ -142,6 +139,7 @@ const PatientInfoPage = () => {
         onSubmit={submitNewEntry}
         error={error}
         onClose={closeModal}
+        allDiagnosisCodes={diagnosis}
       />
       <Button variant="contained" onClick={() => openModal()}>
         Add New Entry
