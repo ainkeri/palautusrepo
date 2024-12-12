@@ -1,0 +1,14 @@
+POST http://localhost:3001/api/patients/d2773822-f723-11e9-8f0b-362b9e155667/entries
+Content-Type: application/json
+
+{   
+  "date": "2019-05-05",
+  "description": "All gucci",
+  "specialist": "Special doctor",
+  "type": "HealthCheck",
+   "diagnosisCodes": [
+        "S62.5",
+        "M51.2"
+   ],
+  "healthCheckRating": 1
+}

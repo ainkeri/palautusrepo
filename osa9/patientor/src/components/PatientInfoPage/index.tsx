@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Diagnosis, Entry, Patient } from "../../types";
+import { Diagnosis, Entry, EntryFormValues, Patient } from "../../types";
 
 import axios from "axios";
 import { apiBaseUrl } from "../../constants";
@@ -13,12 +13,23 @@ import MaleIcon from "@mui/icons-material/Male";
 import HospitalEntry from "./HospitalEntry";
 import HealthCheckEntry from "./HealthCheckEntry";
 import OccupationalHealthcareEntry from "./OccupationalHealthcareEntry";
+import AddEntryModal from "../AddEntryModal";
+import { Button } from "@mui/material";
 
 const PatientInfoPage = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
+  const [entries, setEntries] = useState<Entry[]>([]);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
   const { id } = useParams<{ id: string }>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/patients/${id}`);
@@ -28,6 +39,7 @@ const PatientInfoPage = () => {
         if (id) {
           const patient = await patientService.getPatientById(id);
           setPatient(patient);
+          setEntries(patient.entries || []);
         }
       } catch (e: unknown) {
         if (axios.isAxiosError(e)) {
@@ -60,12 +72,54 @@ const PatientInfoPage = () => {
     void fetchDiagnosisList();
   }, []);
 
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      if (id) {
+        const entry = await patientService.createEntry(id, values);
+        setEntries(entries.concat(entry));
+        setModalOpen(false);
+      }
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e.response?.data && typeof e.response?.data === "object") {
+          const errorData = e.response.data as {
+            error?: string;
+          };
+
+          if (errorData.error) {
+            const message = errorData.error[0] ?? "Valiation error occured.";
+            console.error(`${message.message}`);
+            setError(`${message.message}`);
+          } else {
+            setError("Unrecognized error structure from server.");
+          }
+        } else if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace(
+            "Something went wrong. Error: ",
+            ""
+          );
+          console.error(message);
+          setError(message);
+        } else {
+          setError("Unrecognized axios error");
+        }
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
+    }
+  };
+
   if (!patient) {
     return <p>Loading patient data...</p>;
   }
 
   if (diagnosis.length === 0) {
     return <p>Loading diagnosis data...</p>;
+  }
+
+  if (!entries) {
+    return <p>Loading entry data...</p>;
   }
 
   return (
@@ -83,8 +137,17 @@ const PatientInfoPage = () => {
       <p>ssn: {patient.ssn}</p>
       <p>occupation: {patient.occupation}</p>
       <h3>entries</h3>
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        error={error}
+        onClose={closeModal}
+      />
+      <Button variant="contained" onClick={() => openModal()}>
+        Add New Entry
+      </Button>
       <div>
-        {patient.entries?.map((entry) => (
+        {entries.map((entry) => (
           <EntryDetails key={entry.id} entry={entry} />
         ))}
       </div>

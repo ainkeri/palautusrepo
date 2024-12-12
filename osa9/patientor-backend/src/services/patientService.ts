@@ -4,13 +4,14 @@ import patientData from "../../data/patients.ts";
 
 import {
   NonSensitivePatientInfo,
-  Patient,
   NewPatient,
   Entry,
   EntryWithoutId,
+  Patient,
 } from "../types.ts";
 
-const patients: Patient[] = patientData;
+const patients: NonSensitivePatientInfo[] = patientData;
+const allPatients: Patient[] = patientData;
 
 const getPatients = (): NonSensitivePatientInfo[] => {
   return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
@@ -27,12 +28,11 @@ const getPatientById = (id: string): NonSensitivePatientInfo | undefined => {
   return patient;
 };
 
-const addPatient = (entry: NewPatient): Patient => {
+const addPatient = (entry: NewPatient): NonSensitivePatientInfo => {
   const id = uuid();
   const newPatient = {
     id: id,
     ...entry,
-    entries: [],
   };
 
   patients.push(newPatient);
@@ -40,9 +40,9 @@ const addPatient = (entry: NewPatient): Patient => {
 };
 
 const addEntry = (entry: EntryWithoutId, patientId: string): Entry => {
-  const patient = patients.find((p) => p.id === patientId);
+  const wantedPatient = allPatients.find((p) => p.id === patientId);
 
-  if (!patient?.entries) {
+  if (!wantedPatient?.entries) {
     throw new Error("Patient not found");
   }
 
@@ -54,8 +54,7 @@ const addEntry = (entry: EntryWithoutId, patientId: string): Entry => {
   };
 
   console.log(newEntry);
-
-  patient.entries.push(newEntry);
+  wantedPatient.entries.push(newEntry);
   return newEntry;
 };
 

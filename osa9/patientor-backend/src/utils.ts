@@ -46,7 +46,7 @@ export const NewEntrySchema = z.object({
   ssn: z.string(),
   gender: z.nativeEnum(Gender),
   occupation: z.string(),
-  entries: z.array(EntrySchema),
+  entries: z.array(EntrySchema).optional(),
 });
 
 export const toNewPatient = (object: unknown): NewPatient => {
